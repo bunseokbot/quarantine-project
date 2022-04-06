@@ -1,0 +1,22 @@
+version: "3"
+services:
+  short-url:
+    container_name: short-url
+    build: .
+    image: austinkim/short-url:latest
+    hostname: short-url-server
+    networks:
+      - webserver
+    volumes:
+      - $PWD:/usr/src/app/
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.short-url-service-router.entrypoints=web
+      - traefik.http.routers.short-url-service-router.rule=Host(`short.namjun.kim`)
+      - traefik.docker.network=webserver
+    command: uvicorn app:app --host 0.0.0.0
+
+networks:
+  webserver:
+    external: true
+    name: webserver
